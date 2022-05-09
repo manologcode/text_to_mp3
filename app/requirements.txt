@@ -1,0 +1,4 @@
+flask
+gunicorn
+Unidecode
+gTTS==2.2.2

@@ -1,0 +1,6 @@
+/_site-packages
+DockerfileDevelopment
+runDockerDev.sh
+docker-compose.yml
+README-dev.md
+/app/__pycache__
