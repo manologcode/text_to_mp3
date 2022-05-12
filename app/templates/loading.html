@@ -5,14 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creando el archivo de audio</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/style.css') }}">
 </head>
 <body>
-    <H3>CREANDO....</H3>
-    <p>{{message}}</p>
+    <div class="content">
+        <H3>CREANDO....</H3>
+        <p>{{message}}</p>
+    </div>
     <script>
-        setTimeout(function(){
-            window.location.href = '/loading/';
-        }, 5000); 
+        if ('{{message}}'=="Proceso finalizado"){
+            window.location.href = '/?message=Archivo creado con éxito. Puedes crear otro si quieres';
+        }
+        else{
+            setTimeout(function(){
+                window.location.href = '/loading/';
+            }, 5000); 
+        }
     </script>
 </body>
 </html>

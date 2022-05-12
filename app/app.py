@@ -1,5 +1,3 @@
-from email import message
-from re import M
 from flask import Flask, request, render_template
 from gtts import gTTS
 import os
@@ -14,7 +12,7 @@ def read_text(text, title):
     file.save("temp_files/first.mp3")
     os.system("ffmpeg -i temp_files/first.mp3 -af 'atempo=1.40' temp_files/second.mp3")
     os.remove("temp_files/first.mp3")
-    os.system( 'ffmpeg -i temp_files/fondo.mp3 -i temp_files/second.mp3 -filter_complex "[0:a]volume=.25[A];[1:a][A]amerge[out]" -map [out] -c:a pcm_s16le temp_files/second.wav')
+    os.system( 'ffmpeg -i temp_files/fondo.mp3 -i temp_files/second.mp3 -filter_complex "[0:a]volume=.20[A];[1:a][A]amerge[out]" -map [out] -c:a pcm_s16le temp_files/second.wav')
     os.remove("temp_files/second.mp3")
     title = unidecode.unidecode(title).replace(" ", "_")
     name_file = f"/text_audios/{title}.mp3"
@@ -29,11 +27,21 @@ def index():
         print(data)
         name_file = data['title'] if 'title' in data else None
         text = data['text'] if 'text' in data else None
-        background_thread = Thread(target=read_text, kwargs={"text": text, "title": name_file})
-        background_thread.start()
-        # name_file = read_text(text, name_file)
-        number_works = len(text.split())
-        return render_template('loading.html', message=f"se trata de un texto de {number_works} palabras se va a proceder a crear el archivo",number_works=number_works )
+        if name_file and text:
+            name_file = unidecode.unidecode(name_file).replace(" ", "_")
+            if "/" in name_file:
+                parts=name_file.split('/')
+                folder=f'/text_audios/'+parts[0]
+                if not os.path.exists(folder):
+                   os.makedirs(folder)
+                   os.chown(folder, 1000, 1000)
+            background_thread = Thread(target=read_text, kwargs={"text": text, "title": name_file})
+            background_thread.start()
+            # name_file = read_text(text, name_file)
+            number_works = len(text.split())
+            return render_template('loading.html', message=f"se trata de un texto de {number_works} palabras se va a proceder a crear el archivo",number_works=number_works )
+        else:
+            return render_template('index.html')
     else:
         return render_template('index.html')
 

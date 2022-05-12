@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+  flaskapp:
+    image: manologcode/text_to_mp3
+    restart: always
+    container_name: text_to_mp3
+    command: gunicorn wsgi:app  -w 5 -b :5000 --reload
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./text_audios:/text_audios
+
