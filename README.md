@@ -1,16 +1,22 @@
 # TEXTO TO MP3
 
 Se trata de sencilla aplicación de entorno servidor con interface web que nos permite pasa de un texto a mp3.
-Esta pensada para instalar en una rapsberry y poder disfrutar de servicio en casa. Esta probada en una Raspeberry pi 4
+Esta pensada para instalar en una rapsberry y poder disfrutar de servicio en casa. Esta probada en una Raspeberry pi 4.
+
+El programa pasa a audio un texto, que se introduce en un formulario y le añade una música de fondo para hacerlo un poco más agradable.
+
+![screenshort](screenshort.png)
 
 Para correr la aplicación 
 
-crear primero la carpeta de almacenamiento de resultados
+**crear primero la carpeta de almacenamiento de resultados**
 
     mkdir text_audios
 
 
-### con docker
+con docker
+ 
+```
 
 docker run --rm \
 --name=text_audios \
@@ -18,11 +24,14 @@ docker run --rm \
 -v $PWD/text_audios:/text_audios \
 manologcode/text_to_mp3 
 
+```
 
-### con docker compose
+con docker compose
+
+```
 
 services:
-  flaskapp:
+  text_to_mp3:
     image: manologcode/text_to_mp3
     restart: always
     container_name: text_to_mp3
@@ -32,4 +41,6 @@ services:
     volumes:
       - ./text_audios:/text_audios
 
- Si la corremos en nuestro ordenador una vez arrancado el servido http://localhost:5000 los archivos generados aparecen en la carpeta text_audios.
+```
+
+ Si la corremos en nuestro ordenador una vez arrancado el servido http://localhost:5000 los archivos generados aparecen en la carpeta **text_audios.**
