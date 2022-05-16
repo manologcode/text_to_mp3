@@ -6,7 +6,7 @@ from threading import Thread
 
 app = Flask(__name__)
 
-def read_text(text, title):
+def read_text(text, title, album):
     
     file = gTTS(text=text,lang="es", slow = False)
     file.save("temp_files/first.mp3")
@@ -16,7 +16,7 @@ def read_text(text, title):
     os.remove("temp_files/second.mp3")
     title = unidecode.unidecode(title).replace(" ", "_")
     name_file = f"/text_audios/{title}.mp3"
-    os.system( f'ffmpeg -y -i temp_files/second.wav -af "volume=1.5" {name_file}')    
+    os.system( f'ffmpeg -y -i temp_files/second.wav -metadata title="{title}" -metadata artist="TextToAudio" -metadata album="{album}" -af "volume=1.5" {name_file}')    
     os.remove("temp_files/second.wav")
     return name_file
 
@@ -27,15 +27,17 @@ def index():
         print(data)
         name_file = data['title'] if 'title' in data else None
         text = data['text'] if 'text' in data else None
+        album="leidos"
         if name_file and text:
             name_file = unidecode.unidecode(name_file).replace(" ", "_")
             if "/" in name_file:
                 parts=name_file.split('/')
                 folder=f'/text_audios/'+parts[0]
+                album="texto - " + parts[0]
                 if not os.path.exists(folder):
                    os.makedirs(folder)
                    os.chown(folder, 1000, 1000)
-            background_thread = Thread(target=read_text, kwargs={"text": text, "title": name_file})
+            background_thread = Thread(target=read_text, kwargs={"text": text, "title": name_file , "album": album})
             background_thread.start()
             # name_file = read_text(text, name_file)
             number_works = len(text.split())
